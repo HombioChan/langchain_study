@@ -1,4 +1,5 @@
 import time
+import re
 
 from evaluate.dto import QuestionReq
 from evaluate.file_util import read_dataset_excel, ResultRow, write_results_to_excel
@@ -34,7 +35,13 @@ if __name__ == "__main__":
 
     result_list = []
 
+    start = 0
+    batch_size = 5
     for index, row in enumerate(dataset):
+        if index < start:
+            continue
+        if index >= start + batch_size:
+            break
         for test_chat_bot_shop_id in test_chat_bot_shop_arr:
             clear_session(chat_bot_shop_id=test_chat_bot_shop_id)
         chat_log_list = row.chat_log.split('Đ')
@@ -62,13 +69,22 @@ if __name__ == "__main__":
                     if rewrite_question is None:
                         rewrite_question = answer_rsp.originQuestion
                     result_row = ResultRow(context[:], answer_rsp.originQuestion, rewrite_question, ask_method_name, cost_ts)
-                    # print(result_row)
                     result_row_list.append(result_row)
-            result_list.append(result_row_list)
+            if len(result_row_list) == 0:
+                continue
+            mam = result_row_list[0].match_ask_method
+            if ("宝贝" not in mam
+                    and "订单" not in mam
+                    and "图片" not in mam
+                    and "音频" not in mam
+                    and "视频" not in mam
+                    and "符号" not in mam
+                    and "表情" not in mam):
+                result_list.append(result_row_list)
             context.append(BUYER_PREFIX + buyer_question)
             if len(seller_answers) > 0:
                 for seller_answer in seller_answers:
                     context.append(SELLER_PREFIX + seller_answer)
             print(f'index={index}, chat_log_list_size={len(chat_log_list)}, chunks_size={len(chunks)}, idx={idx}')
-    write_results_to_excel(result_list, '../result/dataset_3c_300_1.xlsx')
+    write_results_to_excel(result_list, '../result/dataset_3c_100_8.xlsx')
 

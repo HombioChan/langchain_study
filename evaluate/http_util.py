@@ -10,6 +10,8 @@ QA_IP = os.getenv('QA_IP')
 def get_answer(question_req: QuestionReq) -> AnswerRsp | None:
     try:
         url = f'http://{QA_IP}:8080/api/test-robot/qa'
+        if question_req.chatbotShopId == 'SHP9875025093853284E2788967982F1':
+            url = f'http://10.0.200.108:8080/api/test-robot/qa'
         payload = question_req.to_json()
         # 设置请求头
         headers = {
@@ -39,6 +41,8 @@ def get_answer(question_req: QuestionReq) -> AnswerRsp | None:
 def clear_session(chat_bot_shop_id: str) :
     try:
         url = f'http://{QA_IP}:8080/api/test-robot/clear/session/{chat_bot_shop_id}'
+        if chat_bot_shop_id == 'SHP9875025093853284E2788967982F1':
+            url = f'http://10.0.200.108:8080/api/test-robot/clear/session/{chat_bot_shop_id}'
         headers = {
             'Content-Type': 'application/json'
         }

@@ -56,7 +56,7 @@ def write_results_to_excel(results, output_file_path):
                 'rewrite_question_old': result_2[1].rewrite_question,
                 'match_ask_method_new': result_2[0].match_ask_method,
                 'match_ask_method_old': result_2[1].match_ask_method,
-                'new_old_equals' : 1 if result_2[0].rewrite_question == result_2[1].rewrite_question else 0,
+                'new_old_equals' : 1 if result_2[0].match_ask_method == result_2[1].match_ask_method else 0,
                 'cost_ts_new': result_2[0].cost_ts,
                 'cost_ts_old': result_2[1].cost_ts
             }
