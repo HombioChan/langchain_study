@@ -22,19 +22,20 @@ if __name__ == "__main__":
     test_third_shop_id = '1901804294533821753'
     test_chat_bot_shop_id = 'SHP928147835494852600163E1274F60'
     # 指定 Excel 文件的路径
-    file_path = '../dataset/test_set.xlsx'
+    file_path = '../dataset/dataset_clothing_300_1.xlsx'
 
     # 调用函数读取并打印 Excel 文件内容
     dataset = read_dataset_excel(file_path)
 
     result_list = []
 
-    for row in dataset:
+    for index, row in enumerate(dataset):
         clear_session(chat_bot_shop_id=test_chat_bot_shop_id)
         chat_log_list = row.chat_log.split('Đ')
         chunks = split_chat_log(chat_log_list)
+        print(f'index={index}, chat_log_list_size={len(chat_log_list)}, chunks_size={len(chunks)}')
         context = []
-        for chunk in chunks:
+        for idx, chunk in enumerate(chunks):
             buyer_question = chunk[0]
             if len(chunk) > 1:
                 seller_answers = chunk[1:]
@@ -53,11 +54,19 @@ if __name__ == "__main__":
                 if rewrite_question is None:
                     rewrite_question = answer_rsp.originQuestion
                 result_row = ResultRow(context[:], answer_rsp.originQuestion, rewrite_question, ask_method_name, cost_ts)
-                print(result_row)
-                result_list.append(result_row)
+                # print(result_row)
+                # if not ('订单卡片' in ask_method_name
+                #         or '宝贝链接' in ask_method_name
+                #         or '视频' in ask_method_name
+                #         or '音频' in ask_method_name
+                #         or '符号' in ask_method_name
+                #         or '表情' in ask_method_name
+                #         or '图片' in ask_method_name):
+                #     result_list.append(result_row)
             context.append(BUYER_PREFIX + buyer_question)
             if len(seller_answers) > 0:
                 for seller_answer in seller_answers:
                     context.append(SELLER_PREFIX + seller_answer)
-    write_results_to_excel(result_list, '../result/result_1.xlsx')
+            print(f'index={index}, chat_log_list_size={len(chat_log_list)}, chunks_size={len(chunks)}, idx={idx}')
+    write_results_to_excel(result_list, '../result/dataset_clothing_300_1.xlsx')
 
