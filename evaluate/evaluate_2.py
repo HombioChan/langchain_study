@@ -36,7 +36,7 @@ if __name__ == "__main__":
     result_list = []
 
     start = 0
-    batch_size = 5
+    batch_size = 20
     for index, row in enumerate(dataset):
         if index < start:
             continue
@@ -61,6 +61,12 @@ if __name__ == "__main__":
                 answer_rsp = get_answer(question_req)
                 cost_ts = int(time.time() * 1000) - start_ts
                 if answer_rsp is not None:
+                    recall_ask_method_list = answer_rsp.recallAskMethodNameList
+                    if recall_ask_method_list is None:
+                        recall_ask_method_list = []
+                    rerank_ask_method_list = answer_rsp.rerankAskMethodNameList
+                    if rerank_ask_method_list is None:
+                        rerank_ask_method_list = []
                     ask_method = answer_rsp.askMethod
                     ask_method_name = '未识别'
                     if ask_method is not None:
@@ -68,7 +74,7 @@ if __name__ == "__main__":
                     rewrite_question = answer_rsp.rewriteQuestion
                     if rewrite_question is None:
                         rewrite_question = answer_rsp.originQuestion
-                    result_row = ResultRow(context[:], answer_rsp.originQuestion, rewrite_question, ask_method_name, cost_ts)
+                    result_row = ResultRow(context[:], answer_rsp.originQuestion, rewrite_question, ask_method_name, recall_ask_method_list, rerank_ask_method_list, cost_ts)
                     result_row_list.append(result_row)
             if len(result_row_list) == 0:
                 continue
@@ -86,5 +92,4 @@ if __name__ == "__main__":
                 for seller_answer in seller_answers:
                     context.append(SELLER_PREFIX + seller_answer)
             print(f'index={index}, chat_log_list_size={len(chat_log_list)}, chunks_size={len(chunks)}, idx={idx}')
-    write_results_to_excel(result_list, '../result/dataset_3c_100_8.xlsx')
-
+    write_results_to_excel(result_list, '../result/dataset_3c_100_37.xlsx')

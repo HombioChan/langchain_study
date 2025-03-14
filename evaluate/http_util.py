@@ -25,6 +25,10 @@ def get_answer(question_req: QuestionReq) -> AnswerRsp | None:
             if success:
                 data_list = json_res['data']
                 data_first = data_list[0]
+                if 'recallAskMethodNameList' not in data_first:
+                    data_first['recallAskMethodNameList'] = []
+                if 'rerankAskMethodNameList' not in data_first:
+                    data_first['rerankAskMethodNameList'] = []
                 answer_rsp = AnswerRsp(**data_first)
                 return answer_rsp
             else:

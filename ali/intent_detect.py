@@ -6,9 +6,9 @@ from dotenv import load_dotenv
 load_dotenv()
 
 intent_string = """
-需要商品推荐
-咨询商品功能
-咨询摄像头可视距离/范围
+买家咨询商品功能
+买家咨询商品区别
+买家咨询商品使用效果
 其他
 """
 
@@ -32,7 +32,7 @@ client = OpenAI(
 )
 messages = [
     {'role': 'system', 'content': system_prompt},
-    {'role': 'user', 'content': "我要声音清楚的监控"}
+    {'role': 'user', 'content': "在不开白光灯的情况下哪种全彩夜视效果好"}
     ]
 response = client.chat.completions.create(
     model="tongyi-intent-detect-v3",

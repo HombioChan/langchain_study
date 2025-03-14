@@ -70,7 +70,9 @@ class AnswerRsp:
     answer: ResultAnswer
     turnHuman: TurnHuman
     focusInfo: FocusInfo
-    stateInfo: dict  # Assuming StateInfo is a dictionary or can be represented as such
+    stateInfo: dict
+    recallAskMethodNameList: []
+    rerankAskMethodNameList: []
 
 @dataclass
 class QuestionReq:

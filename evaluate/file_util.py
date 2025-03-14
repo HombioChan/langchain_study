@@ -11,11 +11,14 @@ class DatasetRow:
         return f"DatasetRow(context_id={self.context_id}, buyer_account={self.buyer_account}, chat_log={self.chat_log})"
 
 class ResultRow:
-    def __init__(self, context: list[str], question: str, rewrite_question: str, match_ask_method: str, cost_ts: int):
+    def __init__(self, context: list[str], question: str, rewrite_question: str, match_ask_method: str, recall_ask_method:[], rerank_ask_method:[], cost_ts: int):
         self.context = context
         self.question = question
         self.rewrite_question = rewrite_question
+        self.recall_ask_method = recall_ask_method
+        self.rerank_ask_method = rerank_ask_method
         self.match_ask_method = match_ask_method
+
         self.cost_ts = cost_ts
 
     def __str__(self):
@@ -53,12 +56,14 @@ def write_results_to_excel(results, output_file_path):
                 'context': '\n'.join(result_2[0].context),
                 'question': result_2[0].question,
                 'rewrite_question_new': result_2[0].rewrite_question,
-                'rewrite_question_old': result_2[1].rewrite_question,
+                'recall_ask_method_list': '\n'.join(result_2[0].recall_ask_method),
+                'rerank_ask_method_list': '\n'.join(result_2[0].rerank_ask_method),
                 'match_ask_method_new': result_2[0].match_ask_method,
+                'rewrite_question_old': result_2[1].rewrite_question,
                 'match_ask_method_old': result_2[1].match_ask_method,
                 'new_old_equals' : 1 if result_2[0].match_ask_method == result_2[1].match_ask_method else 0,
-                'cost_ts_new': result_2[0].cost_ts,
-                'cost_ts_old': result_2[1].cost_ts
+                # 'cost_ts_new': result_2[0].cost_ts,
+                # 'cost_ts_old': result_2[1].cost_ts
             }
             for result_2 in results
         ]
